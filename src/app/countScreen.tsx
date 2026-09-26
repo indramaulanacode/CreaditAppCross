@@ -1,4 +1,3 @@
-// src/app/countscreen.tsx
 import Slider from '@react-native-community/slider';
 import { useMemo, useState } from 'react';
 import {
@@ -85,7 +84,7 @@ function calcAnuitas(principal: number, annualRatePct: number, months: number) {
   return { monthly, totalInterest, totalPay: principal + totalInterest, rows };
 }
 
-export default function CountScreen() {
+export default function countScreen() {
   const [principalStr, setPrincipalStr] = useState('50.000.000');
   const [rate, setRate] = useState(9.5);
   const [months, setMonths] = useState(24);

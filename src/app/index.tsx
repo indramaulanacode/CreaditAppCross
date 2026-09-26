@@ -42,13 +42,19 @@ export default function HomeScreen() {
           get started
         </ThemedText>
 
-         <Pressable onPress={() => router.push('/countScreen')} style={styles.button}>
-  <ThemedText style={styles.buttonText}>Get Started</ThemedText>
+      <Pressable
+  onPress={() => {
+    console.log('TOMBOL DITEKAN');
+    router.push('/countScreen');
+  }}
+  style={styles.button}
+>
+  <ThemedText style={styles.buttonText}>Count</ThemedText>
 </Pressable>
 
 
         <Pressable onPress={() => router.push('/app')} style={styles.button}>
-  <ThemedText style={styles.buttonText}>Explorer</ThemedText>
+  <ThemedText style={styles.buttonText}>App</ThemedText>
 </Pressable>
       
       </SafeAreaView>
