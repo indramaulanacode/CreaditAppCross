@@ -1,13 +1,16 @@
 import Slider from '@react-native-community/slider';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
 import { useMemo, useState } from 'react';
 import {
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -84,6 +87,87 @@ function calcAnuitas(principal: number, annualRatePct: number, months: number) {
   return { monthly, totalInterest, totalPay: principal + totalInterest, rows };
 }
 
+// Button PDF
+function buildPdfHtml(p: {
+  principal: number;
+  rate: number;
+  months: number;
+  method: string;
+  result: {
+    monthly: number;
+    totalInterest: number;
+    totalPay: number;
+    rows: any[];
+  };
+}) {
+  const { principal, rate, months, method, result } = p;
+  const rowsHtml = result.rows
+    .map(
+      (r) => `
+      <tr>
+        <td class="c">${r.bulan}</td>
+        <td>${fmtRp(r.angsuran)}</td>
+        <td>${fmtRp(r.pokok)}</td>
+        <td>${fmtRp(r.bunga)}</td>
+        <td>${fmtRp(r.sisa)}</td>
+      </tr>`
+    )
+    .join('');
+
+  return `
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <style>
+        body { font-family: Helvetica, Arial, sans-serif; color: #1c1a17; padding: 24px; }
+        h1 { color: #12233d; margin-bottom: 4px; }
+        .sub { color: #6b6558; margin-bottom: 20px; font-size: 13px; }
+        .summary { background: #12233d; color: #fff; padding: 16px; border-radius: 6px; margin-bottom: 20px; }
+        .summary .big { color: #e3c481; font-size: 26px; font-weight: bold; margin: 4px 0 10px; }
+        .summary table { width: 100%; font-size: 13px; }
+        .summary td { padding: 3px 0; }
+        .summary td:last-child { text-align: right; font-weight: bold; }
+        table.detail { width: 100%; border-collapse: collapse; font-size: 11px; }
+        table.detail th { background: #f6f3ec; text-align: right; padding: 6px; border: 1px solid #dcd5c5; }
+        table.detail td { text-align: right; padding: 5px 6px; border: 1px solid #dcd5c5; }
+        .c { text-align: center !important; }
+        .foot { margin-top: 16px; font-size: 10px; color: #6b6558; }
+      </style>
+    </head>
+    <body>
+      <h1>Simulasi Kredit</h1>
+      <div class="sub">
+        Metode ${method === 'flat' ? 'Flat' : 'Efektif (Anuitas)'} &middot;
+        Bunga ${rate.toFixed(1)}% per tahun &middot; Tenor ${months} bulan
+      </div>
+
+      <div class="summary">
+        <div>Estimasi angsuran per bulan</div>
+        <div class="big">${fmtRp(result.monthly)}</div>
+        <table>
+          <tr><td>Pokok pinjaman</td><td>${fmtRp(principal)}</td></tr>
+          <tr><td>Total bunga</td><td>${fmtRp(result.totalInterest)}</td></tr>
+          <tr><td>Total pembayaran</td><td>${fmtRp(result.totalPay)}</td></tr>
+        </table>
+      </div>
+
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>Bulan</th><th>Angsuran</th><th>Pokok</th><th>Bunga</th><th>Sisa pokok</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+
+      <div class="foot">
+        Hasil ini adalah simulasi dan dapat berbeda dari penawaran resmi lembaga
+        pembiayaan, yang biasanya menambahkan biaya administrasi, provisi, dan asuransi.
+      </div>
+    </body>
+  </html>`;
+}
+
 export default function countScreen() {
   const [principalStr, setPrincipalStr] = useState('50.000.000');
   const [rate, setRate] = useState(9.5);
@@ -99,7 +183,44 @@ export default function countScreen() {
     return method === 'flat'
       ? calcFlat(principal, rate, months)
       : calcAnuitas(principal, rate, months);
-  }, [principal, rate, months, method]);
+  },
+  [principal, rate, months, method]);
+
+const [exporting, setExporting] = useState(false);
+
+const handleExportPdf = async () => {
+  if (result.rows.length === 0) {
+    Alert.alert('Data kosong', 'Isi jumlah pinjaman terlebih dahulu.');
+    return;
+  }
+  try {
+    setExporting(true);
+    const html = buildPdfHtml({ principal, rate, months, method, result });
+
+    if (Platform.OS === 'web') {
+      await Print.printAsync({ html }); // di web membuka dialog print/save as PDF
+      return;
+    }
+
+    const { uri } = await Print.printToFileAsync({ html });
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(uri, {
+        mimeType: 'application/pdf',
+        dialogTitle: 'Simpan atau bagikan PDF',
+        UTI: 'com.adobe.pdf',
+      });
+    } else {
+      Alert.alert('PDF dibuat', uri);
+    }
+  } catch (e) {
+    Alert.alert('Gagal', 'PDF tidak bisa dibuat. Coba lagi.');
+  } finally {
+    setExporting(false);
+  }
+};
+
+
+  
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -249,15 +370,30 @@ export default function countScreen() {
           )}
         </View>
 
+ 
+
         <Text style={styles.footNote}>
           Hasil ini adalah simulasi dan dapat berbeda dari penawaran resmi
           lembaga pembiayaan, yang biasanya menambahkan biaya administrasi,
           provisi, dan asuransi.
         </Text>
       </ScrollView>
+
+             <Pressable
+  onPress={handleExportPdf}
+  disabled={exporting}
+  style={[styles.pdfButton, exporting && { opacity: 0.6 }]}
+>
+  <Text style={styles.pdfButtonText}>
+    {exporting ? 'Membuat PDF...' : 'Unduh PDF'}
+  </Text>
+</Pressable>
     </SafeAreaView>
   );
 }
+
+
+
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.paper },
@@ -365,4 +501,13 @@ const styles = StyleSheet.create({
   colBulan: { width: 44 },
   colMoney: { flex: 1, textAlign: 'right' },
   footNote: { fontSize: 12, color: COLORS.muted, lineHeight: 18, marginTop: 18 },
+
+  pdfButton: {
+  backgroundColor: COLORS.gold,
+  borderRadius: 6,
+  paddingVertical: 14,
+  alignItems: 'center',
+  marginTop: 16,
+},
+pdfButtonText: { color: '#fff', fontSize: 15, fontWeight: '600' },
 });

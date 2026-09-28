@@ -49,13 +49,10 @@ export default function HomeScreen() {
   }}
   style={styles.button}
 >
-  <ThemedText style={styles.buttonText}>Count</ThemedText>
+  <ThemedText style={styles.buttonText}>Get Started</ThemedText>
 </Pressable>
 
 
-        <Pressable onPress={() => router.push('/app')} style={styles.button}>
-  <ThemedText style={styles.buttonText}>App</ThemedText>
-</Pressable>
       
       </SafeAreaView>
     </ThemedView>
