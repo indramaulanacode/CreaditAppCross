@@ -3,8 +3,8 @@ import { Stack } from 'expo-router';
 export default function RootLayout() {
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="countScreen" options={{ title: 'Calculator' }} />
+      <Stack.Screen name="index" options={{ title: 'Creadit App' }} />
+      <Stack.Screen name="countscreen" options={{ title: 'Kalkulator Kredit' }} />
     </Stack>
   );
-} 
+}
