@@ -119,7 +119,7 @@ function buildPdfHtml(p: {
     <head>
       <meta charset="utf-8" />
       <style>
-        body { font-family: Helvetica, Arial, sans-serif; color: #1c1a17; padding: 24px; }
+        body { font-family: Helvetica, Arial, sans-serif; color: #1c1a17; padding: 4px; }
         h1 { color: #12233d; margin-bottom: 4px; }
         .sub { color: #6b6558; margin-bottom: 20px; font-size: 13px; }
         .summary { background: #12233d; color: #fff; padding: 16px; border-radius: 6px; margin-bottom: 20px; }
@@ -131,7 +131,7 @@ function buildPdfHtml(p: {
         table.detail th { background: #f6f3ec; text-align: right; padding: 6px; border: 1px solid #dcd5c5; }
         table.detail td { text-align: right; padding: 5px 6px; border: 1px solid #dcd5c5; }
         .c { text-align: center !important; }
-        .foot { margin-top: 16px; font-size: 10px; color: #6b6558; }
+        .foot { margin-top: 6px; font-size: 10px; color: #6b6558; }
       </style>
     </head>
     <body>
@@ -397,25 +397,25 @@ const handleExportPdf = async () => {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.paper },
-  container: { padding: 20, paddingBottom: 48 },
+  container: { padding: 20, paddingBottom: 10, marginTop:0 },
   brandRow: { flexDirection: 'row', alignItems: 'baseline', gap: 10, marginBottom: 4 },
   brandMark: { fontSize: 26, fontWeight: '700', color: COLORS.navy },
   h1: {
     fontSize: 26,
     fontWeight: '600',
     color: COLORS.ink,
-    marginTop: 16,
+    marginTop: 1,
     marginBottom: 8,
     lineHeight: 32,
   },
-  lede: { fontSize: 15, color: COLORS.muted, lineHeight: 22, marginBottom: 24 },
+  lede: { fontSize: 15, color: COLORS.muted, lineHeight: 24, marginBottom: 24 },
   card: {
     backgroundColor: COLORS.card,
     borderWidth: 1,
     borderColor: COLORS.line,
     borderRadius: 20,
     padding: 20,
-    marginBottom: 16,
+    marginBottom: 10,
     
   },
   field: { marginBottom: 20 },

@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   count: {
     fontSize: 56,
-    marginTop: Spacing.one,
+    marginTop: 1,
   },
   row: {
     flexDirection: 'row',
