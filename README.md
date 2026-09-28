@@ -35,6 +35,10 @@ npm run reset-project
 
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
+
+**App Prevuews:**
+<img width="1800" height="1105" alt="Screenshot 2026-09-28 at 16 35 19" src="https://github.com/user-attachments/assets/44052944-6d33-4b08-9c43-8489f01d1db5" />
+
 ### Other setup steps
 
 - To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
