@@ -10,6 +10,12 @@
     "ios": {
       "icon": "./assets/expo.icon"
     },
+    "expo": {
+      "name": "Creadit App",
+      "web": {
+        "name": "Creadit App"
+      }
+    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -33,7 +39,8 @@
           "imageWidth": 76
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,

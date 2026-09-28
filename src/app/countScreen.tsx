@@ -385,7 +385,7 @@ const handleExportPdf = async () => {
   style={[styles.pdfButton, exporting && { opacity: 0.6 }]}
 >
   <Text style={styles.pdfButtonText}>
-    {exporting ? 'Membuat PDF...' : 'Unduh PDF'}
+    {exporting ? 'Buat PDF...' : 'Buat PDF'}
   </Text>
 </Pressable>
     </SafeAreaView>
@@ -413,9 +413,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.card,
     borderWidth: 1,
     borderColor: COLORS.line,
-    borderRadius: 6,
+    borderRadius: 20,
     padding: 20,
     marginBottom: 16,
+    
   },
   field: { marginBottom: 20 },
   label: { fontSize: 13, color: COLORS.muted, marginBottom: 8 },
@@ -461,7 +462,7 @@ const styles = StyleSheet.create({
   methodSub: { fontSize: 12, color: COLORS.muted },
   resultCard: {
     backgroundColor: COLORS.navy,
-    borderRadius: 6,
+    borderRadius: 20,
     padding: 22,
     marginBottom: 16,
   },
@@ -504,10 +505,13 @@ const styles = StyleSheet.create({
 
   pdfButton: {
   backgroundColor: COLORS.gold,
-  borderRadius: 6,
+  borderRadius: 30,
   paddingVertical: 14,
   alignItems: 'center',
   marginTop: 16,
+  marginBottom: 32,
+  marginHorizontal: 20,
+
 },
 pdfButtonText: { color: '#fff', fontSize: 15, fontWeight: '600' },
 });
